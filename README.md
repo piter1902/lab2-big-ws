@@ -31,5 +31,5 @@ If you desist of your goal, release it by a PR so other fellow can try it.
 
 |NIA    | User name | Repo | Build Status | What was explored | Review for :gift: | Score
 |-------|-----------|------|--------------|-------------------|----------------------|--------
-|       |           |      |              |                   |                      |
+|758267 | piter1902 |      |   [![Build Status](https://travis-ci.com/piter1902/lab2-big-ws.svg?branch=test)](https://travis-ci.com/piter1902/lab2-big-ws)  |                   |                      |
 
