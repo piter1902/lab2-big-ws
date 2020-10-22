@@ -19,14 +19,10 @@ public class TranslatorServiceTest {
   @Autowired
   TranslatorService translatorService;
 
-  @Test
+  @Test(expected = RuntimeException.class)
   public void translateTest() {
-    TranslatedText translatedText = null;
-    try {
-      translatedText = translatorService.translate("en", "es", "This is a test of translation service");
-    } catch (RuntimeException runtimeException) {
-      assertEquals("I don't know how to translate from en to es the text 'This is a test of translation service'", runtimeException.getMessage());
-    }
+    TranslatedText translatedText = translatorService.translate("en", "es", "This is a test of translation service");
+    assertEquals("I don't know how to translate from en to es the text 'This is a test of translation service'", translatedText.getTranslation());
   }
 
 }

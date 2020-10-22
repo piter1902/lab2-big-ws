@@ -40,62 +40,45 @@ public class TranslatorEndpointTest {
         marshaller.afterPropertiesSet();
     }
 
-    @Test
+    @Test(expected = RuntimeException.class) // Expect RuntimeException
     public void testSendAndReceive() {
         GetTranslationRequest request = new GetTranslationRequest();
         request.setLangFrom("en");
         request.setLangTo("es");
         request.setText("This is a test of translation service");
-        Object response = null;
-        try {
-            response = new WebServiceTemplate(marshaller).marshalSendAndReceive("http://localhost:"
-                    + port + "/ws", request);
-        } catch (RuntimeException runtimeException) {
-//            assertNotNull(response);
-//            assertThat(response, instanceOf(GetTranslationResponse.class));
-//            GetTranslationResponse translation = (GetTranslationResponse) response;
-            assertThat(runtimeException.getMessage(), is("I don't know how to translate from en to es the text 'This is a test of translation service'"));
-        }
+        Object response = new WebServiceTemplate(marshaller).marshalSendAndReceive("http://localhost:"
+                + port + "/ws", request);
+        assertNotNull(response);
+        assertThat(response, instanceOf(GetTranslationResponse.class));
+        GetTranslationResponse translation = (GetTranslationResponse) response;
+        assertThat(translation.getTranslation(), is("I don't know how to translate from en to es the text 'This is a test of translation service'"));
     }
 
-    @Test
+    @Test(expected = WebServiceIOException.class)
     public void testUnreachableHost() {
         GetTranslationRequest request = new GetTranslationRequest();
         request.setLangFrom("en");
         request.setLangTo("es");
         request.setText("This is a test of translation service");
-        Object response = null;
-        try {
-            response = new WebServiceTemplate(marshaller).marshalSendAndReceive("http://localXhost:"
-                    + port + "/ws", request);
-        } catch (Exception exception){
-            // Host is unknown
-            assertThat(exception, instanceOf(WebServiceIOException.class));
-//            WebServiceIOException webServiceIOException = ((WebServiceIOException) exception);
-        }
-//        assertNotNull(response);
-//        assertThat(response, instanceOf(GetTranslationResponse.class));
-//        GetTranslationResponse translation = (GetTranslationResponse) response;
-//        assertThat(translation.getTranslation(), is("I don't know how to translate from en to es the text 'This is a test of translation service'"));
+        Object response = new WebServiceTemplate(marshaller).marshalSendAndReceive("http://localXhost:"
+                + port + "/ws", request);
+        assertNotNull(response);
+        assertThat(response, instanceOf(GetTranslationResponse.class));
+        GetTranslationResponse translation = (GetTranslationResponse) response;
+        assertThat(translation.getTranslation(), is("I don't know how to translate from en to es the text 'This is a test of translation service'"));
     }
 
-    @Test
+    @Test(expected = WebServiceIOException.class)
     public void testServiceNotFound() {
         GetTranslationRequest request = new GetTranslationRequest();
         request.setLangFrom("en");
         request.setLangTo("es");
         request.setText("This is a test of translation service");
-        Object response = null;
-        try {
-            response = new WebServiceTemplate(marshaller).marshalSendAndReceive("http://localhost:"
-                    + port + "/wsX", request);
-        } catch (Exception exception) {
-            // Service Not Found (404)
-            assertThat(exception, instanceOf(WebServiceTransportException.class));
-        }
-//        assertNotNull(response);
-//        assertThat(response, instanceOf(GetTranslationResponse.class));
-//        GetTranslationResponse translation = (GetTranslationResponse) response;
-//        assertThat(translation.getTranslation(), is("I don't know how to translate from en to es the text 'This is a test of translation service'"));
+        Object response = new WebServiceTemplate(marshaller).marshalSendAndReceive("http://localXhost:"
+                + port + "/wsX", request);
+        assertNotNull(response);
+        assertThat(response, instanceOf(GetTranslationResponse.class));
+        GetTranslationResponse translation = (GetTranslationResponse) response;
+        assertThat(translation.getTranslation(), is("I don't know how to translate from en to es the text 'This is a test of translation service'"));
     }
 }
